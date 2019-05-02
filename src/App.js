@@ -37,8 +37,13 @@ function App() {
         }}
         onDrop={e => {
           console.log('drop', e);
+          console.log('files', e.dataTransfer.files.length)
+          for (const file of e.dataTransfer.files) {
+            console.log(file)
+          }
           setDropState()
           stopEvent(e)
+          e.persist()
         }}
       />
       <div id="container">
