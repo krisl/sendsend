@@ -42,7 +42,7 @@ function App() {
             SendSend
           </h1>
           <h2>
-            Peer to peer file transfer.
+            Peer to peer single file transfer
           </h2>
         </div>
         <div
