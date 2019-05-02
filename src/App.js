@@ -2,6 +2,11 @@ import React, { useEffect, useState } from 'react';
 import Peer from 'peerjs';
 import './App.css';
 
+function stopEvent (e) {
+  e.preventDefault()
+  e.stopPropagation()
+}
+
 function App() {
   const [sessionState, setSessionState] = useState({loading: true})
   const [dropState, setDropState] = useState()
@@ -19,21 +24,21 @@ function App() {
   return (
     <div className="App">
       <div id="droparea"
-        onDragOver={e => {console.log('dragover'); e.preventDefault()}}
+        onDragOver={e => {console.log('dragover'); stopEvent(e)}}
         onDragEnter={e => {
           console.log('dragenter', e);
-          e.preventDefault()
           setDropState('HOVER')
+          stopEvent(e)
         }}
         onDragLeave={e => {
           console.log('dragleave', e);
-          e.preventDefault()
           setDropState()
+          stopEvent(e)
         }}
         onDrop={e => {
           console.log('drop', e);
-          e.preventDefault()
           setDropState()
+          stopEvent(e)
         }}
       />
       <div id="container">
