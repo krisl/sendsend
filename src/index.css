@@ -4,7 +4,7 @@ html, body {
 }
 
 body {
-  background: url('./logo.svg');
+  background: white;
 }
 
 body, h1, h2 {
