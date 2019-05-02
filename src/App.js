@@ -13,10 +13,12 @@ function App() {
           <h2>
             Peer to peer file transfer.
           </h2>
-	</div>
-	<div id="status">
-	  <div id="status-inner">
-	    <span id="status-text" />
+        </div>
+        <div id="status">
+          <div id="status-inner">
+            <span id="status-text">
+              <p className="loading">Loading...</p>
+            </span>
           </div>
         </div>
         <div id="progress">
