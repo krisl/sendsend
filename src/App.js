@@ -11,7 +11,7 @@ function App() {
             SendSend
           </h1>
           <h2>
-            Simple peer to peer file transfer.
+            Peer to peer file transfer.
           </h2>
 	</div>
 	<div id="status">
