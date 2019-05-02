@@ -17,7 +17,12 @@ function App() {
   )
   return (
     <div className="App">
-      <div id="droparea" />
+      <div id="droparea"
+        onDragOver={e => {console.log('dragover'); e.preventDefault()}}
+        onDragEnter={e => {console.log('dragenter', e); e.preventDefault()}}
+        onDragLeave={e => {console.log('dragleave', e); e.preventDefault()}}
+        onDrop={e => {console.log('drop', e); e.preventDefault()}}
+      />
       <div id="container">
         <div id="header">
           <h1>
