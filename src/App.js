@@ -4,6 +4,7 @@ import './App.css';
 
 function App() {
   const [sessionState, setSessionState] = useState({loading: true})
+  const [dropState, setDropState] = useState()
   useEffect(
     () => {
       const session = new Peer()
@@ -19,9 +20,21 @@ function App() {
     <div className="App">
       <div id="droparea"
         onDragOver={e => {console.log('dragover'); e.preventDefault()}}
-        onDragEnter={e => {console.log('dragenter', e); e.preventDefault()}}
-        onDragLeave={e => {console.log('dragleave', e); e.preventDefault()}}
-        onDrop={e => {console.log('drop', e); e.preventDefault()}}
+        onDragEnter={e => {
+          console.log('dragenter', e);
+          e.preventDefault()
+          setDropState('HOVER')
+        }}
+        onDragLeave={e => {
+          console.log('dragleave', e);
+          e.preventDefault()
+          setDropState()
+        }}
+        onDrop={e => {
+          console.log('drop', e);
+          e.preventDefault()
+          setDropState()
+        }}
       />
       <div id="container">
         <div id="header">
@@ -32,12 +45,19 @@ function App() {
             Peer to peer file transfer.
           </h2>
         </div>
-        <div id="status" className={sessionState.id ? 'ready' : ''}>
+        <div
+          id="status"
+          className={
+            sessionState.id
+              ? dropState === 'HOVER' ? 'hover' : 'ready'
+              : ''
+          }
+        >
           <div id="status-inner">
             <span id="status-text">
               {sessionState.loading
                 ? <p className="loading">Loading...</p>
-                : `id: ${sessionState.id}`
+                : dropState === 'HOVER' ? 'Drop it!' : `id: ${sessionState.id}`
               }
             </span>
           </div>
