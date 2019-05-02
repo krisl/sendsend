@@ -11,6 +11,10 @@
   }
 }
 
+.loading {
+ color: #666;
+}
+
 #droparea {
   width: 100%;
   height: 100%;
