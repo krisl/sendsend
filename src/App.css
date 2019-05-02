@@ -45,6 +45,14 @@
   border-radius: 50%;
 }
 
+#status.ready {
+  border-color: #ccc;
+  -webkit-transition: border-color .3s ease-in-out;
+  transition: border-color .3s ease-in-out;
+  -webkit-animation: spin 10s linear infinite;
+  animation: spin 10s linear infinite;
+}
+
 #status div {
   width: 100%;
   height: 100%;
@@ -53,6 +61,14 @@
   z-index: 1;
   display: table;
   background-color: rgba(0, 0, 0, 0);
+}
+
+#status.ready div {
+  background: rgba(0, 0, 0, .8);
+  -webkit-animation: spin 10s reverse linear infinite;
+  animation: spin 10s reverse linear infinite;
+  -webkit-transition: background-color .5s ease-in-out;
+  transition: background-color .5s ease-in-out;
 }
 
 #status #status-text {
