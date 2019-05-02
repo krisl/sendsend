@@ -8,7 +8,7 @@ function App() {
       <div id="container">
         <div id="header">
           <h1>
-            Sendsend
+            SendSend
           </h1>
           <h2>
             Simple peer to peer file transfer.
