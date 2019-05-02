@@ -1,7 +1,20 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import Peer from 'peerjs';
 import './App.css';
 
 function App() {
+  const [sessionState, setSessionState] = useState({loading: true})
+  useEffect(
+    () => {
+      const session = new Peer()
+      console.log({session})
+      session.on('open', id => {
+        console.log({id})
+        setSessionState({loading: false, id})
+      })
+    },
+    []
+  )
   return (
     <div className="App">
       <div id="droparea" />
@@ -14,10 +27,13 @@ function App() {
             Peer to peer file transfer.
           </h2>
         </div>
-        <div id="status">
+        <div id="status" className={sessionState.id ? 'ready' : ''}>
           <div id="status-inner">
             <span id="status-text">
-              <p className="loading">Loading...</p>
+              {sessionState.loading
+                ? <p className="loading">Loading...</p>
+                : `id: ${sessionState.id}`
+              }
             </span>
           </div>
         </div>
