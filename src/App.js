@@ -2,6 +2,13 @@ import React, { useEffect, useState } from 'react';
 import Peer from 'peerjs';
 import './App.css';
 
+// TODO tidy state machine
+// TODO error handling / timeouts
+// TODO progress indicator
+// TODO multiple file support
+// TODO "room" support
+// TODO support recipient connecting before files dropped
+
 function stopEvent (e) {
   e.preventDefault()
   e.stopPropagation()
