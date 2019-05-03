@@ -7,6 +7,12 @@ function stopEvent (e) {
   e.stopPropagation()
 }
 
+const getPeerId = () => {
+  const hash = window.location.hash
+  if (hash && typeof hash === 'string')
+    return hash.replace(/\W/g, '')
+}
+
 function App() {
   const [sessionState, setSessionState] = useState({loading: true})
   const [dropState, setDropState] = useState()
@@ -17,11 +23,60 @@ function App() {
       console.log({session})
       session.on('open', id => {
         console.log({id})
-        setSessionState({loading: false, id})
+        setSessionState({loading: false, id, session})
+
+        const peerId = getPeerId()
+        if (peerId) {
+          console.log('need to connect to ' + peerId)
+
+          const connectToHost = peerId => {
+            // make a file and data connection
+            const file = session.connect(peerId, {label: 'FILE'})
+            const data = session.connect(peerId, {label: 'DATA'})
+            setSessionState(s => ({...s, loading: false, waiting: true}))
+
+            file.on('open', (o) => {
+              console.log('file connection open', o);
+              file.on('data', (d) => console.log('fdata', {d}))
+            })
+
+            data.on('open', (o) => {
+              console.log('data connection open', o);
+              data.on('data', (d) => console.log('ddata', {d}))
+            })
+
+            file.on('error', e => console.log('file error', e))
+            data.on('error', e => console.log('data error', e))
+          }
+
+          connectToHost(peerId)
+        }
       })
     },
     []
   )
+
+  const listenForPeer = file => {
+    sessionState.session.on('connection', connection => {
+      if (connection.label === 'FILE') {
+        console.log('incomming file connection');
+        setSessionState(s => ({...s, loading: false, transferring: true}))
+        connection.on('open', (x) => {
+          console.log('incomming file connection open', connection)
+          connection.send(file)
+        })
+      }
+
+      if (connection.label === 'DATA') {
+        console.log('incomming data connection');
+        connection.on('open', () => {
+          console.log('incomming data connection open', connection)
+          connection.send({name: 'bobx'})
+        })
+      }
+    })
+  }
+
   return (
     <div className="App">
       <div id="droparea"
@@ -42,8 +97,10 @@ function App() {
           for (const file of e.dataTransfer.files) {
             console.log(file)
           }
+          const theFile = e.dataTransfer.files[0]
           setDropState('WAITING')
-          setFile(e.dataTransfer.files[0])
+          setFile(theFile)
+          listenForPeer(theFile)
           stopEvent(e)
           e.persist()
         }}
@@ -61,7 +118,9 @@ function App() {
           id="status"
           className={
             sessionState.id
-              ? dropState === 'HOVER' ? 'hover' : 'ready'
+              ? dropState === 'HOVER'
+                ? 'hover'
+                : sessionState.waiting ? '...waiting' : 'ready'
               : ''
           }
         >
