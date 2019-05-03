@@ -79,6 +79,7 @@ function App() {
 
   return (
     <div className="App">
+      {/* TODO only enable drop area after connection */}
       <div id="droparea"
         onDragOver={e => {console.log('dragover'); stopEvent(e)}}
         onDragEnter={e => {
