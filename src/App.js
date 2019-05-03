@@ -37,7 +37,18 @@ function App() {
 
             file.on('open', (o) => {
               console.log('file connection open', o);
-              file.on('data', (d) => console.log('fdata', {d}))
+              file.on('data', (d) => {
+                console.log('fdata', {d})
+                const file = d.file
+                if (file && file.constructor === ArrayBuffer) {
+                  const dataView = new Uint8Array(file)
+                  const dataBlob = new Blob([dataView], {type: d.type})
+                  const url = window.URL.createObjectURL(dataBlob)
+                  setSessionState(s => ({...s, completed: true, url, type: d.type, size: d.size, name: d.name, dataBlob}))
+                } else {
+                  console.log('oops')
+                }
+              })
             })
 
             data.on('open', (o) => {
@@ -63,7 +74,7 @@ function App() {
         setSessionState(s => ({...s, loading: false, transferring: true}))
         connection.on('open', (x) => {
           console.log('incomming file connection open', connection)
-          connection.send(file)
+          connection.send({file, name: file.name, size: file.size, type: file.type})
         })
       }
 
@@ -150,15 +161,25 @@ function App() {
           <div id="progress-second">
           </div>
         </div>
-        <div id="message" className={dropState === 'WAITING' ? 'open' : ''}>
+        <div id="message" className={(dropState === 'WAITING' || sessionState.completed) ? 'open' : ''}>
           <span id="message-text">
-            {dropState === 'WAITING' &&
+            {(dropState === 'WAITING' || sessionState.completed) &&
               <>
                 <span className="icon">✔</span>
                 {'File is ready '}
-                <span id='share' className='link'>
-                  {`${document.URL}#${sessionState.id}`}
-                </span>
+                {sessionState.completed && (
+                  <span>
+                    {sessionState.type} {sessionState.size} -
+                    <a target="_blank" className="link" href={sessionState.url} download={sessionState.name}>
+                      Click here to download
+                    </a>
+                  </span>
+                )}
+                {dropState === 'WAITING' && (
+                  <span id='share' className='link'>
+                    {`${document.URL}#${sessionState.id}`}
+                  </span>
+                )}
               </>
             }
           </span>
