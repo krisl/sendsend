@@ -10,6 +10,7 @@ function stopEvent (e) {
 function App() {
   const [sessionState, setSessionState] = useState({loading: true})
   const [dropState, setDropState] = useState()
+  const [file, setFile] = useState()
   useEffect(
     () => {
       const session = new Peer()
@@ -41,7 +42,8 @@ function App() {
           for (const file of e.dataTransfer.files) {
             console.log(file)
           }
-          setDropState()
+          setDropState('WAITING')
+          setFile(e.dataTransfer.files[0])
           stopEvent(e)
           e.persist()
         }}
@@ -67,7 +69,17 @@ function App() {
             <span id="status-text">
               {sessionState.loading
                 ? <p className="loading">Loading...</p>
-                : dropState === 'HOVER' ? 'Drop it!' : `id: ${sessionState.id}`
+                : (
+                  dropState === 'HOVER' ? 'Drop it!'
+                  : dropState === 'WAITING' ? (
+                    <>
+                      <p>{file.name}</p>
+                      <p>{file.size}</p>
+                      <p>{file.type}</p>
+                    </>
+                  )
+                  : `id: ${sessionState.id}`
+                )
               }
             </span>
           </div>
@@ -78,8 +90,18 @@ function App() {
           <div id="progress-second">
           </div>
         </div>
-        <div id="message">
-          <span id="message-text"></span>
+        <div id="message" className={dropState === 'WAITING' ? 'open' : ''}>
+          <span id="message-text">
+            {dropState === 'WAITING' &&
+              <>
+                <span className="icon">✔</span>
+                {'File is ready '}
+                <span id='share' className='link'>
+                  {`${document.URL}#${sessionState.id}`}
+                </span>
+              </>
+            }
+          </span>
         </div>
       </div>
     </div>
