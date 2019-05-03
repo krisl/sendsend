@@ -90,8 +90,12 @@ function App() {
 
   return (
     <div className="App">
-      {/* TODO only enable drop area after connection */}
       <div id="droparea"
+        style={
+          (console.log({sessionState}) || sessionState.waiting || dropState === 'WAITING')
+            ? {display: 'none'}
+            : {}
+        }
         onDragOver={e => {console.log('dragover'); stopEvent(e)}}
         onDragEnter={e => {
           console.log('dragenter', e);
