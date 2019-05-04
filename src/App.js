@@ -21,7 +21,7 @@ const getPeerId = () => {
 }
 
 function App() {
-  const [sessionState, setSessionState] = useState({loading: true})
+  const [appState, setAppState] = useState({state: 'registering'})
   const [dropState, setDropState] = useState()
   const [file, setFile] = useState()
   useEffect(
@@ -30,7 +30,7 @@ function App() {
       console.log({session})
       session.on('open', id => {
         console.log({id})
-        setSessionState({loading: false, id, session})
+        setAppState({state: 'registered', id, session})
 
         const peerId = getPeerId()
         if (peerId) {
@@ -40,7 +40,7 @@ function App() {
             // make a file and data connection
             const file = session.connect(peerId, {label: 'FILE'})
             const data = session.connect(peerId, {label: 'DATA'})
-            setSessionState(s => ({...s, loading: false, waiting: true}))
+            setAppState(s => ({...s, state: 'waiting'}))
 
             file.on('open', (o) => {
               console.log('file connection open', o);
@@ -51,7 +51,7 @@ function App() {
                   const dataView = new Uint8Array(file)
                   const dataBlob = new Blob([dataView], {type: d.type})
                   const url = window.URL.createObjectURL(dataBlob)
-                  setSessionState(s => ({...s, completed: true, url, type: d.type, size: d.size, name: d.name, dataBlob}))
+                  setAppState(s => ({...s, state: 'completed', url, type: d.type, size: d.size, name: d.name, dataBlob}))
                 } else {
                   console.log('oops')
                 }
@@ -75,10 +75,10 @@ function App() {
   )
 
   const listenForPeer = file => {
-    sessionState.session.on('connection', connection => {
+    appState.session.on('connection', connection => {
       if (connection.label === 'FILE') {
         console.log('incomming file connection');
-        setSessionState(s => ({...s, loading: false, transferring: true}))
+        setAppState(s => ({...s, state: 'transferring'}))
         connection.on('open', (x) => {
           console.log('incomming file connection open', connection)
           connection.send({file, name: file.name, size: file.size, type: file.type})
@@ -99,7 +99,7 @@ function App() {
     <div className="App">
       <div id="droparea"
         style={
-          (console.log({sessionState}) || sessionState.waiting || dropState === 'WAITING')
+          (console.log({appState}) || appState.state === 'waiting' || dropState === 'WAITING')
             ? {display: 'none'}
             : {}
         }
@@ -140,16 +140,16 @@ function App() {
         <div
           id="status"
           className={
-            sessionState.id
+            appState.id
               ? dropState === 'HOVER'
                 ? 'hover'
-                : sessionState.waiting ? '...waiting' : 'ready'
+                : appState.state === 'waiting' ? '...waiting' : 'ready'
               : ''
           }
         >
           <div id="status-inner">
             <span id="status-text">
-              {sessionState.loading
+              {appState.state === 'loading'
                 ? <p className="loading">Loading...</p>
                 : (
                   dropState === 'HOVER' ? 'Drop it!'
@@ -160,7 +160,7 @@ function App() {
                       <p>{file.type}</p>
                     </>
                   )
-                  : `id: ${sessionState.id}`
+                  : `id: ${appState.id}`
                 )
               }
             </span>
@@ -172,23 +172,23 @@ function App() {
           <div id="progress-second">
           </div>
         </div>
-        <div id="message" className={(dropState === 'WAITING' || sessionState.completed) ? 'open' : ''}>
+        <div id="message" className={(dropState === 'WAITING' || appState.state === 'completed') ? 'open' : ''}>
           <span id="message-text">
-            {(dropState === 'WAITING' || sessionState.completed) &&
+            {(dropState === 'WAITING' || appState.state === 'completed') &&
               <>
                 <span className="icon">✔</span>
                 {'File is ready '}
-                {sessionState.completed && (
+                {appState.state === 'completed' && (
                   <span>
-                    {sessionState.type} {sessionState.size} -
-                    <a target="_blank" className="link" href={sessionState.url} download={sessionState.name}>
+                    {appState.type} {appState.size} -
+                    <a target="_blank" className="link" href={appState.url} download={appState.name}>
                       Click here to download
                     </a>
                   </span>
                 )}
                 {dropState === 'WAITING' && (
                   <span id='share' className='link'>
-                    {`${document.URL}#${sessionState.id}`}
+                    {`${document.URL}#${appState.id}`}
                   </span>
                 )}
               </>
