@@ -143,7 +143,7 @@ function App() {
             appState.id
               ? dropState === 'HOVER'
                 ? 'hover'
-                : appState.state === 'waiting' ? '...waiting' : 'ready'
+                : appState.state === 'waiting' ? 'waiting' : 'ready'
               : ''
           }
         >

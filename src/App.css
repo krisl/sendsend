@@ -61,7 +61,7 @@
   animation: spin 10s linear infinite;
 }
 
-#status.hover {
+#status.hover, #status.waiting {
   border-color: #aaa;
 }
 
