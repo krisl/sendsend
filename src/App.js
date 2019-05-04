@@ -23,7 +23,6 @@ const getPeerId = () => {
 function App() {
   const [appState, setAppState] = useState({state: 'registering'})
   const [dropState, setDropState] = useState()
-  const [file, setFile] = useState()
   useEffect(
     () => {
       const session = new Peer()
@@ -123,11 +122,10 @@ function App() {
           for (const file of e.dataTransfer.files) {
             console.log(file)
           }
-          const theFile = e.dataTransfer.files[0]
+          const file = e.dataTransfer.files[0]
           setDropState()
-          setAppState(s => ({...s, state: 'waitingForClientConnections'}))
-          setFile(theFile)
-          listenForPeer(theFile)
+          setAppState(s => ({...s, state: 'waitingForClientConnections', file}))
+          listenForPeer(file)
           stopEvent(e)
           e.persist()
         }}
@@ -158,9 +156,9 @@ function App() {
                 : (
                   appState.state === 'waitingForClientConnections' ? (
                     <>
-                      <p>{file.name}</p>
-                      <p>{file.size}</p>
-                      <p>{file.type}</p>
+                      <p>{appState.file.name}</p>
+                      <p>{appState.file.size}</p>
+                      <p>{appState.file.type}</p>
                     </>
                   )
                   : dropState === 'HOVER' ? 'Drop it!'
