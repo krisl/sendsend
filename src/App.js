@@ -30,7 +30,7 @@ function App() {
       console.log({session})
       session.on('open', id => {
         console.log({id})
-        setAppState({state: 'registered', id, session})
+        setAppState({state: 'registered', session})
 
         const peerId = getPeerId()
         if (peerId) {
@@ -140,7 +140,7 @@ function App() {
         <div
           id="status"
           className={
-            appState.id
+            appState.session.id
               ? dropState === 'HOVER'
                 ? 'hover'
                 : appState.state === 'waiting' ? '...waiting' : 'ready'
@@ -160,7 +160,7 @@ function App() {
                       <p>{file.type}</p>
                     </>
                   )
-                  : `id: ${appState.id}`
+                  : `id: ${appState.session.id}`
                 )
               }
             </span>
@@ -188,7 +188,7 @@ function App() {
                 )}
                 {dropState === 'WAITING' && (
                   <span id='share' className='link'>
-                    {`${document.URL}#${appState.id}`}
+                    {`${document.URL}#${appState.session.id}`}
                   </span>
                 )}
               </>
