@@ -20,7 +20,6 @@ const getPeerId = () => {
     return hash.replace(/\W/g, '')
 }
 
-const amReadyServer = appState => (appState.state === 'registered' && !appState.host)
 function App() {
   const [appState, setAppState] = useState({state: 'registering'})
   const [dropState, setDropState] = useState()
@@ -32,7 +31,10 @@ function App() {
       session.on('open', id => {
         console.log({id})
         const peerId = getPeerId()
-        setAppState({state: 'registered', host: peerId, id, session})
+        setAppState({
+          state: peerId ? 'connectingToHost' : 'waitingForFileSelection',
+          id, session
+        })
 
         if (peerId) {
           console.log('need to connect to ' + peerId)
@@ -100,7 +102,7 @@ function App() {
     <div className="App">
       <div id="droparea"
         style={
-          amReadyServer(appState)
+          appState.state === 'waitingForFileSelection'
             ? {}
             : {display: 'none'}
         }
