@@ -41,7 +41,7 @@ function App() {
             // make a file and data connection
             const file = session.connect(peerId, {label: 'FILE'})
             const data = session.connect(peerId, {label: 'DATA'})
-            setAppState(s => ({...s, state: 'waiting'}))
+            setAppState(s => ({...s, state: 'waitingToReceive'}))
 
             file.on('open', (o) => {
               console.log('file connection open', o);
@@ -100,7 +100,7 @@ function App() {
     <div className="App">
       <div id="droparea"
         style={
-          amReadyServer(appState) && dropState !== 'WAITING'
+          amReadyServer(appState)
             ? {}
             : {display: 'none'}
         }
@@ -122,7 +122,8 @@ function App() {
             console.log(file)
           }
           const theFile = e.dataTransfer.files[0]
-          setDropState('WAITING')
+          setDropState()
+          setAppState(s => ({...s, state: 'waitingForClientConnections'}))
           setFile(theFile)
           listenForPeer(theFile)
           stopEvent(e)
@@ -144,7 +145,7 @@ function App() {
             appState.id
               ? dropState === 'HOVER'
                 ? 'hover'
-                : appState.state === 'waiting' ? 'waiting' : 'ready'
+                : appState.state === 'waitingToReceive' ? 'waiting' : 'ready'
               : ''
           }
         >
@@ -153,14 +154,14 @@ function App() {
               {appState.state === 'loading'
                 ? <p className="loading">Loading...</p>
                 : (
-                  dropState === 'HOVER' ? 'Drop it!'
-                  : dropState === 'WAITING' ? (
+                  appState.state === 'waitingForClientConnections' ? (
                     <>
                       <p>{file.name}</p>
                       <p>{file.size}</p>
                       <p>{file.type}</p>
                     </>
                   )
+                  : dropState === 'HOVER' ? 'Drop it!'
                   : `id: ${appState.id}`
                 )
               }
@@ -173,9 +174,9 @@ function App() {
           <div id="progress-second">
           </div>
         </div>
-        <div id="message" className={(dropState === 'WAITING' || appState.state === 'completed') ? 'open' : ''}>
+        <div id="message" className={(appState.state === 'waitingForClientConnections' || appState.state === 'completed') ? 'open' : ''}>
           <span id="message-text">
-            {(dropState === 'WAITING' || appState.state === 'completed') &&
+            {(appState.state === 'waitingForClientConnections' || appState.state === 'completed') &&
               <>
                 <span className="icon">✔</span>
                 {'File is ready '}
@@ -187,7 +188,7 @@ function App() {
                     </a>
                   </span>
                 )}
-                {dropState === 'WAITING' && (
+                {appState.state === 'waitingForClientConnections' && (
                   <span id='share' className='link'>
                     {`${document.URL}#${appState.id}`}
                   </span>
