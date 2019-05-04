@@ -20,6 +20,7 @@ const getPeerId = () => {
     return hash.replace(/\W/g, '')
 }
 
+const amReadyServer = appState => (appState.state === 'registered' && !appState.host)
 function App() {
   const [appState, setAppState] = useState({state: 'registering'})
   const [dropState, setDropState] = useState()
@@ -30,9 +31,9 @@ function App() {
       console.log({session})
       session.on('open', id => {
         console.log({id})
-        setAppState({state: 'registered', id, session})
-
         const peerId = getPeerId()
+        setAppState({state: 'registered', host: peerId, id, session})
+
         if (peerId) {
           console.log('need to connect to ' + peerId)
 
@@ -99,9 +100,9 @@ function App() {
     <div className="App">
       <div id="droparea"
         style={
-          (console.log({appState}) || appState.state === 'waiting' || dropState === 'WAITING')
-            ? {display: 'none'}
-            : {}
+          amReadyServer(appState) && dropState !== 'WAITING'
+            ? {}
+            : {display: 'none'}
         }
         onDragOver={e => {console.log('dragover'); stopEvent(e)}}
         onDragEnter={e => {
