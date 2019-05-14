@@ -25,7 +25,7 @@ function App() {
   const [dropState, setDropState] = useState()
   useEffect(
     () => {
-      const session = new Peer()
+      const session = new Peer(undefined, {debug: 3})
       console.log({session})
       session.on('open', id => {
         console.log({id})
@@ -40,7 +40,7 @@ function App() {
 
           const connectToHost = peerId => {
             // make a file and data connection
-            const file = session.connect(peerId, {label: 'FILE'})
+            const file = session.connect(peerId, {label: 'FILE', reliable: true})
             const data = session.connect(peerId, {label: 'DATA'})
             setAppState(s => ({...s, state: 'waitingToReceive'}))
 
@@ -84,6 +84,7 @@ function App() {
         connection.on('open', (x) => {
           console.log('incomming file connection open', connection)
           connection.send({file, name: file.name, size: file.size, type: file.type})
+          setAppState(s => ({...s, state: 'waitingForClientConnections'}))
         })
       }
 
@@ -161,6 +162,7 @@ function App() {
                       <p>{appState.file.type}</p>
                     </>
                   )
+                  : appState.state === 'transferring' ? 'transferring...'
                   : dropState === 'HOVER' ? 'Drop it!'
                   : `id: ${appState.id}`
                 )
