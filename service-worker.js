@@ -11,10 +11,10 @@
  * See https://goo.gl/2aRDsh
  */
 
-importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.0/workbox-sw.js");
+importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/sendsend/precache-manifest.51e6ea055bb2f33e40fe56a08c7dfea1.js"
+  "/sendsend/precache-manifest.f4c6a1d7668290cfba11fb3f876c80ec.js"
 );
 
 self.addEventListener('message', (event) => {

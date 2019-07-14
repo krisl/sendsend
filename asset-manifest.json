@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/sendsend/static/css/main.a50efc9b.chunk.css",
-    "main.js": "/sendsend/static/js/main.312327e9.chunk.js",
-    "main.js.map": "/sendsend/static/js/main.312327e9.chunk.js.map",
+    "main.css": "/sendsend/static/css/main.727cfde5.chunk.css",
+    "main.js": "/sendsend/static/js/main.9b9fb036.chunk.js",
+    "main.js.map": "/sendsend/static/js/main.9b9fb036.chunk.js.map",
     "runtime~main.js": "/sendsend/static/js/runtime~main.95442527.js",
     "runtime~main.js.map": "/sendsend/static/js/runtime~main.95442527.js.map",
-    "static/js/2.2f700959.chunk.js": "/sendsend/static/js/2.2f700959.chunk.js",
-    "static/js/2.2f700959.chunk.js.map": "/sendsend/static/js/2.2f700959.chunk.js.map",
+    "static/js/2.e06c68de.chunk.js": "/sendsend/static/js/2.e06c68de.chunk.js",
+    "static/js/2.e06c68de.chunk.js.map": "/sendsend/static/js/2.e06c68de.chunk.js.map",
     "index.html": "/sendsend/index.html",
-    "precache-manifest.51e6ea055bb2f33e40fe56a08c7dfea1.js": "/sendsend/precache-manifest.51e6ea055bb2f33e40fe56a08c7dfea1.js",
+    "precache-manifest.f4c6a1d7668290cfba11fb3f876c80ec.js": "/sendsend/precache-manifest.f4c6a1d7668290cfba11fb3f876c80ec.js",
     "service-worker.js": "/sendsend/service-worker.js",
-    "static/css/main.a50efc9b.chunk.css.map": "/sendsend/static/css/main.a50efc9b.chunk.css.map"
+    "static/css/main.727cfde5.chunk.css.map": "/sendsend/static/css/main.727cfde5.chunk.css.map"
   }
 }
